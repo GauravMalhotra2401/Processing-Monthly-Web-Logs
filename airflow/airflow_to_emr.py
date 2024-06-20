@@ -90,8 +90,8 @@ with DAG(
             'KeepJobFlowAliveWhenNoSteps': False,
             'TerminationProtected': False,
         },
-        'JobFlowRole': 'AmazonMWAA-EMR-DefaultRole',
-        'ServiceRole': 'AmazonMWAA-EMR-EC2-DefaultRole',
+        'JobFlowRole': 'EMR_DefaultRole',
+        'ServiceRole': 'EMR_EC2_DefaultRole',
     }
 
     # Create an EMR cluster
