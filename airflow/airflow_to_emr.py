@@ -1,12 +1,24 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.providers.amazon.aws.operators.lambda_function import AwsLambdaInvokeFunctionOperator
+import boto3
+import json
+# from airflow.providers.amazon.aws.operators.lambda_function import AwsLambdaInvokeFunctionOperator
+from airflow.operators.python_operator import PythonOperator
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
 from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreateJobFlowOperator
 from airflow.providers.amazon.aws.operators.emr_add_steps import EmrAddStepsOperator
 from airflow.providers.amazon.aws.operators.emr_terminate_job_flow import EmrTerminateJobFlowOperator
 from airflow.providers.amazon.aws.sensors.emr_step import EmrStepSensor
 from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+
+# Function to invoke Lambda
+def invoke_lambda_function(**kwargs):
+    lambda_client = boto3.client('lambda')
+    response = lambda_client.invoke(
+        FunctionName='mock-web-logs',
+        InvocationType='Event',  # or 'RequestResponse' if you need a response
+    )
+    print(response)
 
 # Default arguments
 default_args = {
@@ -28,12 +40,18 @@ with DAG(
     catchup=False,
 ) as dag:
     
-    # Task to invoke the Lambda function
-    invoke_lambda = AwsLambdaInvokeFunctionOperator(
-        task_id='invoke_lambda',
-        function_name='mock-web-logs',  # Change to your Lambda function name
-        invocation_type='Event',  # Change to 'Event' if you don't want to wait for response
-        aws_conn_id='aws_default',  # Ensure this AWS connection ID exists in Airflow
+    # # Task to invoke the Lambda function
+    # invoke_lambda = AwsLambdaInvokeFunctionOperator(
+    #     task_id='invoke_lambda',
+    #     function_name='mock-web-logs',  # Change to your Lambda function name
+    #     invocation_type='Event',  # Change to 'Event' if you don't want to wait for response
+    #     aws_conn_id='aws_default',  # Ensure this AWS connection ID exists in Airflow
+    # )
+
+    invoke_lambda = PythonOperator(
+        task_id='invoke_lambda_function',
+        python_callable=invoke_lambda_function,
+        provide_context=True,
     )
 
     # Sensor to wait for the new file in S3
