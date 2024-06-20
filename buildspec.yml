@@ -20,7 +20,7 @@ phases:
       - echo "Updating Lambda function via S3..."
       - aws lambda update-function-code --function-name mock-web-logs --s3-bucket web-logs-bucket-monthly-packages --s3-key deployment_package_weblogs.zip
       - echo "Copying spark script to S3 bucket"
-      - aws s3 cp s3_to_hive/* s3://airflow-weblogs-spark-bucket/
+      - aws s3 cp spark-job-script/* s3://airflow-weblogs-spark-bucket/
       - echo "Copying airflow_to_emr file to S3 bucket"
       - aws s3 cp airflow/* s3://airflow-weblogs-bucket/dags/
       - echo "Deployment complete!"
