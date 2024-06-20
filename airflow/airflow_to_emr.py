@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.providers.amazon.aws.operators.lambda_function import AwsLambdaInvokeFunctionOperator
+from airflow.providers.amazon.aws.operators.lambda_invoke import AwsLambdaInvokeFunctionOperator
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
 from airflow.providers.amazon.aws.operators.emr_create_job_flow import EmrCreateJobFlowOperator
 from airflow.providers.amazon.aws.operators.emr_add_steps import EmrAddStepsOperator
