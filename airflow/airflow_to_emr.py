@@ -58,7 +58,7 @@ with DAG(
     wait_for_new_file = S3KeySensor(
         task_id='wait_for_new_file',
         bucket_name='web-logs-bucket-monthly',  # Change to your S3 bucket name
-        bucket_key='/',  # Change to the S3 path where new files will be uploaded
+        bucket_key='web_logs_monthly.csv',  # Change to the S3 path where new files will be uploaded
         aws_conn_id='aws_default',  # Ensure this AWS connection ID exists in Airflow
         timeout=18*60*60,  # 18 hours
         poke_interval=60,  # 1 minute
